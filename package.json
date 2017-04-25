@@ -1,0 +1,23 @@
+{
+  "name": "mobx-weapp",
+  "version": "0.0.1",
+  "description": "Wechat App binding for Mobx",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jkzing/mobx-weapp.git"
+  },
+  "keywords": [
+    "Mobx",
+    "WeChat"
+  ],
+  "author": "jkzing <jingkai.zhao@foxmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jkzing/mobx-weapp/issues"
+  },
+  "homepage": "https://github.com/jkzing/mobx-weapp#readme"
+}
