@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "babel --presets es2015,stage-1 src/ --out-dir dist/ --source-maps",
+    "build": "babel --presets es2015,stage-1 src/ --out-dir dist/",
     "watch-compile": "npm run build -- --watch",
     "watch": "npm run watch-compile",
     "test": "echo \"Error: no test specified\" && exit 1"
