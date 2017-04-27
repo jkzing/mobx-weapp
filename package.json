@@ -2,7 +2,7 @@
   "name": "mobx-weapp",
   "version": "0.0.1",
   "description": "Wechat App binding for Mobx",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/jkzing/mobx-weapp/issues"
   },
-  "homepage": "https://github.com/jkzing/mobx-weapp#readme"
+  "homepage": "https://github.com/jkzing/mobx-weapp#readme",
+  "peerDependencies": {
+    "mobx": "^3.1.9"
+  },
+  "devDependencies": {
+    "mobx": "^3.1.9"
+  }
 }
