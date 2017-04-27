@@ -1,4 +1,35 @@
 import {autorun, Reaction} from 'mobx';
+import {assert, warning} from './utils';
+
+/**
+ * setup reaction observer
+ */
+function setupReaction(mapState) {
+  const store = this.$store;
+  // map initial state
+  this.setData(mapState(store, this.data));
+
+  const self = this;
+
+  // create reaction for mapped state
+  const reaction = new Reaction(`page-${+new Date()}`, function () {
+    this.track(reactionFn.bind(self, mapState));
+  });
+
+  // start reaction
+  reaction.runReaction();
+  this.$reaction = reaction;
+}
+
+/**
+ * reactive function
+ * will be called each time store changes
+ */
+function reactionFn(mapState) {
+  let store = this.$store;
+  let mapped = mapState(store, this.data);
+  this.setData(mapped);
+}
 
 export default function observer(mapState, mapActions) {
   return function(view = {}) {
@@ -9,23 +40,20 @@ export default function observer(mapState, mapActions) {
        * start data reaction
        */
       onLoad() {
-        let __store = this.$store;
+        if (mapState) {
+          // only setup reaction when store properties has been mapped to data
+          setupReaction.call(this, mapState);
+        }
 
-        // map initial state
-        this.setData(mapState(__store));
+        if (mapActions) {
+          let actions = mapActions(this.$store, this.data) || {};
+          Object.keys(actions).forEach(name => {
+            warning(this[name] !== undefined, 'trying to overwrite an existing property');
+            this[name] = actions[name];
+          });
+        }
 
-        const self = this;
-
-        // create reaction for mapped state
-        const __reaction = new Reaction(`page-${+new Date()}`, function () {
-          this.track(self.__reactionFn.bind(self));
-        });
-
-        // start reaction
-        __reaction.runReaction();
-        this.$reaction = __reaction;
-
-        if (typeof view.onLoad === 'function') view.onLoad();
+        if (typeof view.onLoad === 'function') view.onLoad.call(this);
       },
 
       /**
@@ -33,19 +61,11 @@ export default function observer(mapState, mapActions) {
        * dispose reactions
        */
       onUnload() {
-        this.$reaction.dispose();
+        if (this.$reaction) {
+          this.$reaction.dispose();
+        }
         if (typeof view.onUnload === 'function') view.onUnload();
-      },
-
-      /**
-       * reactive function
-       * will be called each time store changes
-       */
-      __reactionFn() {
-        let store = this.$store;
-        let mapped = mapState(store);
-        this.setData(mapped);
-      },
+      }
     };
   }
 };
