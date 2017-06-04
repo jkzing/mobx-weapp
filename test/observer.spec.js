@@ -5,4 +5,4 @@ describe('observer', () => {
     it('exposes observer function', () => {
         expect(typeof observer).toBe('function');
     });
-})
+});
