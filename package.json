@@ -42,10 +42,7 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "coverageReporters": [
-      "text",
-      "text-summary"
-    ],
+    "coverageReporters": ["lcov"],
     "coveragePathIgnorePatterns": [
       "dist/",
       "node_modules/",
