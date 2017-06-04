@@ -1,6 +1,6 @@
 {
   "name": "mobx-weapp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Wechat App binding for Mobx",
   "main": "dist/index.js",
   "scripts": {
