@@ -46,6 +46,7 @@
       "text-summary"
     ],
     "coveragePathIgnorePatterns": [
+      "dist/",
       "node_modules/",
       ".node/",
       "test/"
