@@ -62,8 +62,8 @@ function observer(mapState, mapActions) {
         if (mapActions) {
           var actions = mapActions(this.$store, this.data) || {};
           Object.keys(actions).forEach(function (name) {
-            (0, _utils.warning)(_this[name] !== undefined, 'trying to overwrite an existing property');
-            (0, _utils.assert)(typeof actions[name] === 'function', 'Actions can only be function');
+            (0, _utils.warning)(_this[name] !== undefined, 'Trying to overwrite an existing property.');
+            (0, _utils.assert)(typeof actions[name] === 'function', 'Actions can only be function.');
             _this[name] = actions[name];
           });
         }

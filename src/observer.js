@@ -48,8 +48,8 @@ export default function observer(mapState, mapActions) {
         if (mapActions) {
           let actions = mapActions(this.$store, this.data) || {};
           Object.keys(actions).forEach(name => {
-            warning(this[name] !== undefined, 'trying to overwrite an existing property');
-            assert(typeof actions[name] === 'function', 'Actions can only be function');
+            warning(this[name] !== undefined, 'Trying to overwrite an existing property.');
+            assert(typeof actions[name] === 'function', 'Actions can only be function.');
             this[name] = actions[name];
           });
         }
