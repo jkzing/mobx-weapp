@@ -10,6 +10,10 @@
     "watch": "npm run watch-compile",
     "test": "jest --coverage"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/jkzing/mobx-weapp.git"
