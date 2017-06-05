@@ -54,6 +54,7 @@ export default function observer(mapState, mapActions) {
           });
         }
 
+        /* istanbul ignore else */
         if (typeof view.onLoad === 'function') view.onLoad.call(this);
       },
 
@@ -62,9 +63,11 @@ export default function observer(mapState, mapActions) {
        * dispose reactions
        */
       onUnload() {
+        /* istanbul ignore else */
         if (this.$reaction) {
           this.$reaction.dispose();
         }
+        /* istanbul ignore else */
         if (typeof view.onUnload === 'function') view.onUnload();
       }
     };

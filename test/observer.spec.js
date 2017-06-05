@@ -31,4 +31,16 @@ describe('observer', () => {
         expect(onLoad).toHaveBeenCalled();
         expect(onUnload).toHaveBeenCalled();
     });
+
+    it('should not create reaction when mapState is not defined', () => {
+        options = observer()(options);
+        expect(options.setData).not.toHaveBeenCalled();
+    });
+
+    it('should use empty object as options when it is not defined', () => {
+        options = observer()();
+        expect(typeof options).toBe('object');
+    });
+
+
 });
