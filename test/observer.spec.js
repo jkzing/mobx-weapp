@@ -42,5 +42,18 @@ describe('observer', () => {
         expect(typeof options).toBe('object');
     });
 
+    it('passes store and data into mapActions helper', () => {
+        options.$store = {};
+        options.data = {};
+        let mapActions = jest.fn();
+        mapActions.mockReturnValue({
+            getName: () => {},
+            setName: () => {},
+        });
+        options = observer(null, mapActions)(options);
+        options.onLoad();
+        expect(mapActions.mock.calls[0][0]).toBe(options.$store);
+        expect(mapActions.mock.calls[0][1]).toBe(options.data);
+    })
 
 });
