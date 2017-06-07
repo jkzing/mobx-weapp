@@ -32,6 +32,20 @@ describe('observer', () => {
         expect(onUnload).toHaveBeenCalled();
     });
 
+    it('should pass original arguments into proxied onLoad and onUnload', () => {
+        let onLoad = jest.fn();
+        let onUnload = jest.fn();
+        options.onLoad = onLoad;
+        options.onUnload = onUnload;
+
+        options = observer()(options);
+        options.onLoad(1, 2);
+        options.onUnload(1, 2);
+
+        expect(onLoad.mock.calls[0]).toEqual([1, 2]);
+        expect(onUnload.mock.calls[0]).toEqual([1, 2]);
+    })
+
     it('should not create reaction when mapState is not defined', () => {
         options = observer()(options);
         expect(options.setData).not.toHaveBeenCalled();
