@@ -4,10 +4,13 @@ import {createStore, observer} from '../src';
 
 describe('mobx-weapp main', () => {
     let oldPage;
+    let oldApp;
     let store;
     beforeEach(() => {
         global.Page = jest.fn();
+        global.App = jest.fn();
         oldPage = Page;
+        oldApp = App;
         store = {};
         createStore(store);
     });
@@ -20,6 +23,11 @@ describe('mobx-weapp main', () => {
         expect(Page).not.toBe(oldPage);
         Page({});
         expect(oldPage).toHaveBeenCalled();
+    });
+    it('creates proxy method for global App', () => {
+        expect(App).not.toBe(oldApp);
+        App({});
+        expect(oldApp).toHaveBeenCalled();
     });
     it('adds alias $store for store on Page options', () => {
         let options = {};

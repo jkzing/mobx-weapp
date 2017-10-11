@@ -6,6 +6,7 @@ describe('observer', () => {
     let options;
     beforeEach(() => {
         global.Page = jest.fn();
+        global.App = jest.fn();
         options = {
             setData: jest.fn(),
         };
