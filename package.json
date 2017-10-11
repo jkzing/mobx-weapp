@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "babel src/ --out-dir dist/",
+    "build": "node_modules/.bin/babel src/ --out-dir dist/",
     "watch-compile": "npm run build -- --watch",
     "watch": "npm run watch-compile",
     "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
