@@ -1,11 +1,12 @@
 import {autorun, Reaction} from 'mobx';
 import {assert, warning} from './utils';
+import StoreMgr from './store';
 
 /**
  * setup reaction observer
  */
 function setupReaction(mapState) {
-  const store = this.$store;
+  const store = StoreMgr.getStore();
   // map initial state
   this.setData(mapState(store, this.data));
 
@@ -26,50 +27,80 @@ function setupReaction(mapState) {
  * will be called each time store changes
  */
 function reactionFn(mapState) {
-  let store = this.$store;
+  const store = StoreMgr.getStore();
   let mapped = mapState(store, this.data);
   this.setData(mapped);
 }
 
+function startMobxReaction(mapState, mapActions) {
+  const store = StoreMgr.getStore();
+  Object.defineProperty(this, '$store', {
+    enumerable: false,
+    writable: false,
+    configurable: false,
+    value: store
+  });
+  if (mapState) {
+    // only setup reaction when store properties has been mapped to data
+    setupReaction.call(this, mapState);
+  }
+
+  if (mapActions) {
+    let actions = mapActions(store, this.data) || {};
+    Object.keys(actions).forEach(name => {
+      warning(this[name] !== undefined, 'Trying to overwrite an existing property.');
+      assert(typeof actions[name] === 'function', 'Actions can only be function.');
+      this[name] = actions[name];
+    });
+  }
+}
+
+function stopMobxReaction() {
+  if (this.$reaction) {
+    this.$reaction.dispose();
+  }
+}
+
 export default function observer(mapState, mapActions) {
-  return function(view = {}) {
-    return {
-      ...view,
-      /**
-       * overwrite onLoad lifecycle hook
-       * start data reaction
-       */
-      onLoad() {
-        if (mapState) {
-          // only setup reaction when store properties has been mapped to data
-          setupReaction.call(this, mapState);
-        }
-
-        if (mapActions) {
-          let actions = mapActions(this.$store, this.data) || {};
-          Object.keys(actions).forEach(name => {
-            warning(this[name] !== undefined, 'Trying to overwrite an existing property.');
-            assert(typeof actions[name] === 'function', 'Actions can only be function.');
-            this[name] = actions[name];
-          });
-        }
+  return function(options = {}, isComponent = false) {
+    const opts = { ...options };
+    if (isComponent) {
+      const { attached, detached } = options;
+      opts.attached = function() {
+        startMobxReaction.call(this, mapState, mapActions);
 
         /* istanbul ignore else */
-        if (typeof view.onLoad === 'function') view.onLoad.apply(this, arguments);
-      },
-
-      /**
-       * overwrite onUnload lifecycle hook
-       * dispose reactions
-       */
-      onUnload() {
-        /* istanbul ignore else */
-        if (this.$reaction) {
-          this.$reaction.dispose();
+        if (typeof attached === 'function') {
+          attached.apply(this, arguments);
         }
-        /* istanbul ignore else */
-        if (typeof view.onUnload === 'function') view.onUnload.apply(this, arguments);
       }
-    };
+
+      opts.detached = function() {
+        stopMobxReaction.call(this);
+        /* istanbul ignore else */
+        if (typeof detached === 'function') {
+          detached.apply(this, arguments);
+        }
+      }
+    } else {
+      const { onLoad, onUnload } = options;
+      opts.onLoad = function() {
+        startMobxReaction.call(this, mapState, mapActions);
+
+        /* istanbul ignore else */
+        if (typeof onLoad === 'function') {
+          onLoad.apply(this, arguments);
+        }
+      }
+
+      opts.onUnload = function() {
+        stopMobxReaction.call(this);
+        /* istanbul ignore else */
+        if (typeof onUnload === 'function') {
+          onUnload.apply(this, arguments);
+        }
+      }
+    }
+    return opts;
   }
 };
