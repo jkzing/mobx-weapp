@@ -32,7 +32,7 @@ function reactionFn(mapState) {
   this.setData(mapped);
 }
 
-function startMobxReaction(mapState, mapActions) {
+function startMobxReaction(mapState, mapActions, isComponent) {
   const store = StoreMgr.getStore();
   Object.defineProperty(this, '$store', {
     enumerable: false,
@@ -46,11 +46,12 @@ function startMobxReaction(mapState, mapActions) {
   }
 
   if (mapActions) {
+    const actionMount = isComponent ? this.methods = this.methods || {} : this;
     let actions = mapActions(store, this.data) || {};
     Object.keys(actions).forEach(name => {
-      warning(this[name] !== undefined, 'Trying to overwrite an existing property.');
-      assert(typeof actions[name] === 'function', 'Actions can only be function.');
-      this[name] = actions[name];
+      warning(actionMount[name] !== undefined, 'Trying to overwrite an existing property.');
+      assert(typeof actions[name] !== 'function', 'Actions can only be function.');
+      actionMount[name] = actions[name];
     });
   }
 }
@@ -85,7 +86,7 @@ export default function observer(mapState, mapActions) {
     } else {
       const { onLoad, onUnload } = options;
       opts.onLoad = function() {
-        startMobxReaction.call(this, mapState, mapActions);
+        startMobxReaction.call(this, mapState, mapActions, isComponent);
 
         /* istanbul ignore else */
         if (typeof onLoad === 'function') {
