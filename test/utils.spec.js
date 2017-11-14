@@ -12,7 +12,7 @@ describe('utils', () => {
         }).toThrow();
     });
     it('warn in console when warning condition fails', () => {
-        warning(false, '');
+        warning(true, '');
         expect(console.warn).toHaveBeenCalled();
     });
 });
