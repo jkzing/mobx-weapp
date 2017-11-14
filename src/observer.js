@@ -49,7 +49,7 @@ function startMobxReaction(mapState, mapActions, isComponent) {
     const actionMount = isComponent ? this.methods = this.methods || {} : this;
     let actions = mapActions(store, this.data) || {};
     Object.keys(actions).forEach(name => {
-      warning(actionMount[name] === undefined, 'Trying to overwrite an existing property.');
+      warning(actionMount[name] !== undefined, 'Trying to overwrite an existing property.');
       assert(typeof actions[name] === 'function', 'Actions can only be function.');
       actionMount[name] = actions[name];
     });

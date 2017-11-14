@@ -5,7 +5,7 @@ export function assert(condition, message) {
 
 export function warning(condition, message) {
   /* istanbul ignore else */
-  if (!condition) {
+  if (condition) {
     console.warn(`[mobx-weapp]: ${message}`);
   }
 }
