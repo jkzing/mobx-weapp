@@ -29,6 +29,12 @@ function setupReaction(mapState) {
 function reactionFn(mapState) {
   const store = StoreMgr.getStore();
   let mapped = mapState(store, this.data);
+  // ignore same value
+  Object.keys(mapped).forEach(key => {
+    if (mapped[key] === this.data[key]) {
+      delete mapped[key];
+    }
+  });
   this.setData(mapped);
 }
 
